@@ -1,0 +1,47 @@
+﻿@using org.Common;
+@using org.Model;
+@{
+
+    LoginUser UserInfo = ViewBag.LoginUser;
+}
+
+<div class="item">
+    <a class="ui logo icon image" href="/">
+        <img src="/static/images/logo.png">
+    </a>
+    <a href="/"><b>全村的希望</b></a>
+</div>
+<div class="leftMenu">
+    @{
+        if (UserInfo.uid > 0)
+        {
+            if (UserInfo.type == 1)
+            {
+                <div class="item">
+                    <div class="header">组织管理</div>
+                    <div class="menu">
+                        <a class="item" href="@Url.Action("Index", "ORG")">组织列表</a>
+                    </div>
+                </div>
+            }
+
+            <div class="item">
+                <div class="header">成员管理</div>
+                <div class="menu">
+                    <a class="item" href="@Url.Action("Index", "User")">成员列表</a>
+                    <a class="item" href="@Url.Action("Index", "Record")">礼包分配记录</a>
+                    @if (UserInfo.type != 3)
+                    {
+                        <a class="item" href="@Url.Action("Index", "Reward")">人员奖惩</a>
+                    }
+                </div>
+            </div>
+            <div class="item">
+                <div class="header">系统管理</div>
+                <div class="menu">
+                    <a class="item" href="@Url.Action("Logout", "Login")">退出系统</a>
+                </div>
+            </div>
+        }
+    }
+</div>

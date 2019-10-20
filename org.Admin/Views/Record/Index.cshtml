@@ -1,0 +1,201 @@
+﻿@using org.Common;
+@using org.Model;
+@{
+    Page.Title = "分配记录列表";
+    Page.Description = "分配记录列表";
+    string Pager = ViewBag.pager;
+    List<Record> items = ViewBag.items;
+    LoginUser UserInfo = ViewBag.LoginUser;
+}
+@section css{
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery.datetimepicker.css" />
+
+}
+@section js{
+    <script type="text/javascript" src="~/static/js/jquery.datetimepicker.js"></script>
+}
+<div class="article">
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h2 class="ui header">
+                    @Page.Title
+                    <div class="sub header">@Page.Description</div>
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="main container">
+        <div class="ui active tab" data-tab="overview">
+            <form method="get" class="ui form">
+                <div class="fields">
+                    <div class="three wide field">
+                        <a href="@Url.Action("Edit")" class="ui large blue label"><i class="plus icon"></i>申请本周分配记录</a>
+                        @{
+                            if (UserInfo.type != 3)
+                            {
+                                <a id="Distributionbtn" class="ui large blue label">发配本周礼包</a>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="fields">
+                    <div class="two wide field">
+                        <input type="text" name="date" id="date" placeholder="分配时间"  value="@ViewBag.CurrentTime"/>
+                    </div>
+                    <div class="two wide field">
+                        <button class="ui button" type="submit">查询</button>
+                    </div>
+                    <div class="four wide field">
+                        <button type="button" class="ui green button" onclick="top.location.href = '@Url.Action("Index")';">本周列表</button>
+                    </div>
+                </div>
+            </form>
+            <table class="ui celled table selectable">
+                <thead>
+                    <tr>
+                        <th>成员名</th>
+                        <th>等级</th>
+                        <th>战力</th>
+                        <th>通灵积分</th>
+                        <th>战斗次数</th>
+                        <th>上周获包扣分</th>
+                        <th>其他加分</th>
+                        <th>其他扣分</th>
+                        <th>总分</th>
+                        <th>礼包</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        <tr>
+                            <td>
+                                @item.uname
+                            </td>
+                            <td>
+                                @item.level
+                            </td>
+                            <td>
+                                @item.powernum
+                            </td>
+                            <td>
+                                @item.fighttime
+                            </td>
+                            <td>
+                                @item.lastweekdeduction
+                            </td>
+                            <td>
+                                @item.otherbonuspoints
+                            </td>
+                            <td>
+                                @item.otherdeduction
+                            </td>
+                            <td>
+                                @item.sumpoints
+                            </td>
+
+                            <td>
+                                @{
+                                    var eo = EnumUtils.GetDescriptionStyle((Enums.BagType)item.bagtype);
+                                }
+                                <span class="ui olivelabel">@Html.Raw(eo.Description)</span>
+                            </td>
+                            <td>
+                                @{
+                                    if (item.uid == UserInfo.uid &&item.bagtype==0)
+                                    {
+                                        <a href="@(Url.Action("Edit"))" class="btn btn-white btn-sm"><i class="fa fa-trash"></i>修改</a>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="8">
+                            @Html.Raw(Pager)
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="ui tiny modal" id="userModal">
+    <i class="close icon"></i>
+    <div class="header">
+        选择用户
+    </div>
+    <form class="ui form content">
+        <div class="field">
+            <div class="field">
+                <label>传说数量</label>
+                <input type="number" id="cscount" placeholder="传说数量" value="" />
+            </div>
+        </div>
+        <div class="field">
+            <div class="field">
+                <label>英雄数量</label>
+                <input type="number" id="yxcount" placeholder="英雄数量" value="" />
+            </div>
+        </div>
+        <div class="field">
+            <div class="field">
+                <label>精英数量</label>
+                <input type="number" id="jycount" placeholder="精英数量" value="" />
+            </div>
+        </div>
+    </form>
+    <div class="actions">
+        <div class="ui button deny">关闭</div>
+        <div class="ui button positive">确认选择</div>
+    </div>
+</div>
+<script>
+    //ModelExt.alert("");
+    $(function () {
+        jQuery.datetimepicker.setLocale('zh');
+        jQuery('#date').datetimepicker({ format: 'Y-m-d', timepicker: false });
+        $("#Distributionbtn").on("click", function () {
+            $('#userModal')
+                .modal({
+                    closable: false,
+                    onDeny: function () {
+                        return true;
+                    },
+                    onApprove: function () {
+                        selectUser();
+                        return true;
+                    }
+                })
+                .modal('show');
+        });
+
+        function selectUser() {
+            var cscount = $("#cscount").val();
+            var yxcount = $("#yxcount").val();
+            var jycount = $("#jycount").val();
+            var t = confirm("请确认删除！");
+            if (t) {
+                $.ajax({
+                    url: "/Record/Distribution",
+                    data: { cscount: cscount, yxcount: yxcount, jycount: jycount },
+                    type: "POST",
+                    success: function (d) {
+                        ModelExt.alert({
+                            content: d.msg,
+                            actions: {
+                                ok: function (event) {
+                                    window.location.reload();
+                                }
+                            }
+                        });
+                    }
+                })
+            }
+        }
+    });
+</script>

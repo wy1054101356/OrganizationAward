@@ -1,0 +1,75 @@
+﻿@model User
+@using org.Model;
+@using org.Admin.Common;
+@using org.Bll;
+@{
+    Page.Title = "注册成员";
+    Page.Description = "注册成员";
+}
+@section css{
+
+}
+@section js{
+
+}
+
+<div class="article">
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h2 class="ui header">
+                    @(Page.Title)
+                    <div class="sub header">
+                        @(Page.Description)
+                    </div>
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="main container">
+        <div class="ui active tab" data-tab="overview">
+            <form class="ui form" action="@Url.Action("EditUser")" method="post">
+                <div class="ui segment">
+                    <div class="field">
+                        <label>成员名</label>
+                        <input type="hidden" name="uid" id="uid" placeholder="" value="@Model.uid" />
+                        <input type="hidden" name="oname" id="oname" placeholder="" value="@Model.oname" />
+                        <input type="hidden" name="created" id="created" placeholder="" value="@Model.created" />
+                        <input type="hidden" name="status" id="status" placeholder="" value="@Model.status" />
+                        <input type="text" name="uname" id="uname" placeholder="成员名" value="@Model.uname" />
+                    </div>
+                    <div class="field">
+                        <label>QQ账号</label>
+                        <input type="text" name="QQnumber" id="QQnumber" placeholder="QQ账号" value="@Model.QQnumber" />
+                    </div>
+                    <div class="field">
+                        <label>所在组织</label>
+                        @Html.DropDownList("oid", DDList.GetORGListItem(), new { @onchange = "changeoid();" })
+                    </div>
+
+                    <div class="field" style="display:@(Model.uid == 0?"block":"none")">
+                        <label>密码</label>
+                        <input type="text" name="password" id="password" placeholder="" value="@Model.password" />
+                    </div>
+
+                    <div class="field">
+                        <label>成员角色</label>
+                        @Html.DropDownList("user_type", DDList.GetEnumListItem(Enums.UserTypeEnumDrop.Normal, "==选择角色=="))
+                    </div>
+                </div>
+                <input type="hidden" name="uid" id="uid" />
+                <div class="ui segment">
+                    <div class="fields" style="margin-top:2em">
+                        <button class="ui fluid primary button" type="submit">确认保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function changeoid() {
+        $("#oname").val($("#oid").find("option:selected").text());
+    }
+</script>
+}

@@ -1,0 +1,71 @@
+﻿@using org.Common;
+@using org.Model;
+@{
+    Page.Title = "组织列表";
+    Page.Description = "组织列表";
+    string Pager = ViewBag.pager;
+    List<organization> items = ViewBag.items;
+}
+
+<div class="article">
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h2 class="ui header">
+                    @Page.Title
+                    <div class="sub header">@Page.Description</div>
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="main container">
+        <div class="ui active tab" data-tab="overview">
+            <form method="get" class="ui form">
+                <div class="fields">
+                    <div class="three wide field">
+                        <a href="@Url.Action("Edit")" class="ui large blue label"><i class="plus icon"></i>添加新组织</a>
+                    </div>
+                </div>
+            </form>
+            <table class="ui celled table selectable">
+                <thead>
+                    <tr>
+                        <th>组织名</th>
+                        <th>创建时间</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                    <tr>
+                        <td>
+                            <a href="@(Url.Action("Edit",new { id=item.oid}))">@item.oname</a>
+                        </td>
+                        <td>
+                            @TypeConvert.LongToDateTime(item.created).ToString("yyyy-MM-dd HH:mm");
+                        </td>
+                        <td>
+                            <span class="ui @(item.status==(int)Enums.StatusEnum.Normal?"olive":"delete") label"> @(item.status== (int)Enums.StatusEnum.Normal ? "正常" : "删除")</span>
+                        </td>
+                        <td>
+                            <a href="javascript:Del('@Url.Action("Delete")',@item.oid)" class="btn btn-white btn-sm"><i class="fa fa-trash"></i>删除</a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="8">
+                            @Html.Raw(Pager)
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    //ModelExt.alert("");
+</script>

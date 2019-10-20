@@ -1,0 +1,125 @@
+﻿@using org.Model;
+@using org.Admin.Common;
+@using org.Bll;
+@{
+    Page.Title = "添加 奖惩";
+    Page.Description = "添加奖惩";
+    LoginUser UserInfo = ViewBag.UserInfo;
+}
+@section css{
+
+}
+@section js{
+
+}
+
+<div class="article">
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h2 class="ui header">
+                    @(Page.Title)
+                    <div class="sub header">
+                        @(Page.Description)
+                    </div>
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="main container">
+        <div class="ui active tab" data-tab="overview">
+            <form class="ui form" action="@Url.Action("EditReward")" method="post">
+                <div class="ui segment">
+                    <div class="field">
+                        <label>选择用户</label>
+                        <input type="text" name="uname" id="uname" placeholder="选择用户" />
+                    </div>
+                    <div class="field">
+                        <label>奖/惩</label>
+                        @Html.DropDownList("type", DDList.GetEnumListItem(Enums.RewardType.reward, "==选择奖/惩=="))
+                    </div>
+                    <div class="field">
+                        <label>分数（惩罚请输入负分）</label>
+                        <input type="number" name="points" id="points" placeholder="分数" />
+                    </div>
+                    <div class="field">
+                        <label>备注</label>
+                        <textarea name="remark" id="remark" rows="2" placeholder="备注"></textarea>
+                    </div>
+                </div>
+                <input type="hidden" name="uid" id="uid" />
+                <div class="ui segment">
+                    <div class="fields" style="margin-top:2em">
+                        <button class="ui fluid primary button" type="submit">确认添加</button>
+                        <button class="ui fluid  button" type="button" onclick="top.location.href = '/Reward';">返回列表...</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="ui tiny modal" id="userModal">
+    <i class="close icon"></i>
+    <div class="header">
+        选择用户
+    </div>
+    <form class="ui form content">
+        <div class="two fields">
+            <div class="field">
+                <input type="text" name="suser" id="suser" />
+            </div>
+            <div class="field">
+                <button type="button" name="search" id="search" class="ui primary button" onclick="GetUser();">查询用户</button>
+            </div>
+        </div>
+        <div class="field">
+            <select id="userlist" name="userlist"></select>
+        </div>
+    </form>
+    <div class="actions">
+        <div class="ui button deny">关闭</div>
+        <div class="ui button positive">确认选择</div>
+    </div>
+</div>
+
+<script type="text/javascript">
+        $(function () {
+            $("#uname").on("click", function () {
+                $('#userModal')
+                    .modal({
+                        closable: false,
+                        onDeny: function () {
+                            return true;
+                        },
+                        onApprove: function () {
+                            selectUser();
+                            return true;
+                        }
+                    })
+                    .modal('show');
+            });
+        });
+
+		function GetUser() {
+            var name = $("#suser").val();
+			if (name != "") {
+				var url = "@Url.Action("GetUserList", "User")";
+                $("#userlist").empty();
+				$.post(url,{name: name},
+                    function (data) {
+                        data.map(function (item, index) {
+                            $("#userlist").append("<option value=\"" + item.uid + "\">" + item.uname + "</option>");
+                        });
+					});
+			}
+        }
+
+        function selectUser() {
+            var text = $("#userlist").find("option:selected").text();
+            var val = $("#userlist").val();
+            $("#uname").val(text);
+            $("#uid").val(val);
+        }
+</script>
+}

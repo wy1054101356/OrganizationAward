@@ -1,0 +1,80 @@
+﻿@model Record
+@using org.Model;
+@using org.Admin.Common;
+@using org.Bll;
+@{
+    Page.Title = "添加/修改 分配记录";
+    Page.Description = "添加/修改分配记录";
+    LoginUser UserInfo = ViewBag.LoginUser;
+}
+@section css{
+
+}
+@section js{
+
+}
+
+<div class="article">
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h2 class="ui header">
+                    @(Page.Title)
+                    <div class="sub header">
+                        @(Page.Description)
+                    </div>
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="main container">
+        <div class="ui active tab" data-tab="overview">
+            <form class="ui form" action="@Url.Action("EditRecord")" method="post">
+                <div class="ui segment">
+                    <input type="hidden" name="rid" id="rid" placeholder="" value="@Model.rid" />
+                    <input type="hidden" name="uid" id="uid" placeholder="" value="@Model.uid" />
+                    <input type="hidden" name="oid" id="oid" placeholder="" value="@Model.oid" />
+                    <input type="hidden" name="oname" id="oname" placeholder="" value="@Model.oname" />
+                    <input type="hidden" name="created" id="created" placeholder="" value="@Model.created" />
+                    <input type="hidden" name="lastweekdeduction" id="lastweekdeduction" placeholder="" value="@Model.lastweekdeduction" />
+                    <input type="hidden" name="otherdeduction" id="otherdeduction" placeholder="" value="@Model.otherdeduction" />
+                    <input type="hidden" name="sumpoints" id="sumpoints" placeholder="" value="@Model.sumpoints" />
+                    <input type="hidden" name="bagtype" id="bagtype" placeholder="" value="@Model.bagtype" />
+                    <div class="field">
+                        <label>成员名</label>
+                        <input type="text" name="uname" id="uname" placeholder="成员名" value="@UserInfo.uname" readonly="readonly" />
+                    </div>
+                    <div class="field">
+                        <label>等级</label>
+                        <input type="text" name="level" id="level" placeholder="等级" value="@Model.level" />
+                    </div>
+                    <div class="field">
+                        <label>战力</label>
+                        <input type="text" name="powernum" id="powernum" placeholder="战力" value="@Model.powernum" />
+                    </div>
+                    <div class="field">
+                        <label>通灵积分</label>
+                        <input type="text" name="tongling" id="tongling" placeholder="通灵积分" value="@Model.tongling" />
+                    </div>
+                    <div class="field">
+                        <label>战斗次数</label>
+                        <input type="text" name="fighttime" id="fighttime" placeholder="fighttime" value="@Model.fighttime" />
+                    </div>
+                </div>
+                <input type="hidden" name="uid" id="uid" />
+                <div class="ui segment">
+                    <div class="fields" style="margin-top:2em">
+                        <button class="ui fluid primary button" type="submit">确认保存</button>
+                        <button class="ui fluid  button" type="button" onclick="top.location.href = '/Record';">返回列表...</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function changeoid() {
+        $("#oname").val($("#oid").find("option:selected").text());
+    }
+</script>
+}

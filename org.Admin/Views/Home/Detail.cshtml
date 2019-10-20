@@ -1,0 +1,108 @@
+﻿@model Topic
+@using org.Model;
+@using NIU.Forum.Common;
+@{
+    Layout = null;
+    UserEx user = ViewBag.user;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="~/static/css/wap/main.css" />
+</head>
+<body>
+    <div class="bg-f0">
+        <div style="padding-bottom: 5rem;">
+            <div class="p-lr-15 p-tb-10 bg-35 ub ub-ac">
+                <i class="iconfont icon-shouye1 text-white text-18 mr-10"></i>
+                <p class="ub-f1 text-white text-16">
+                    <a href="/" class="text-white">首页 <i class="iconfont icon-jiantou text-white text-12"></i> </a>
+                </p>
+                <i class="text-14 text-white">牛票票</i>
+            </div>
+            <div class='bg-fa p-lr-15'>
+                <div class='ub ub-ac p-tb-15 bb-1'>
+                    <div class='mr-10'>
+                        <img class="avatar40" src="@($"{user.avatar}/avatar")" />
+                    </div>
+                    <div class='ub-f1'>
+                        <div class='text-14 mb-10'>@(user.nickName)</div>
+                        <div class='text-12 text-88'>
+                            粉丝
+                            <span class="text-32 text-12">@(user.fansCount)</span> 人，中奖
+                            <span class="text-32 text-12">@(user.bingoCount)</span> 次
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='bg-fa mb-10 p-15'>
+                <div class='ub ub-ac  mb-10'>
+                    <div class='ub-f1 text-18'>@Model.title</div>
+                    @if (Model.isBingo > BingoState.NotBingo)
+                    {
+                        <div class='red-border-small'>晒中</div>
+                    }
+                </div>
+                @if (!string.IsNullOrEmpty(Model?.JsonContent?.html))
+                {
+                    @Html.Raw(Model.JsonContent.html);
+                }
+                else
+                {
+                    if (Model?.JsonContent?.attach1?.Count > 0)
+                    {
+                        foreach (var att in Model.JsonContent.attach1)
+                        {
+                            <img class="w-100 mb-10" src="@($"{att.url}/m_xq")" />
+                        }
+                    }
+                    <div class='text-14 line-h-26'>@Html.Raw(Model.JsonContent._text)</div>
+                }
+                <div class='text-88 line-h-26 text-12 mt-10'>发表于 @TypeConvert.LongToDateTime(Model.created).ToString("yyyy-MM-dd HH:mm:ss")</div>
+            </div>
+            <div class='p-15 bg-fa mb-10'>
+                @if (Model?.JsonContent?.attach2 != null && Model?.JsonContent?.attach2?.Count > 0)
+                {
+                   <div class='mb text-14'>获牛票票喜上加喜红包</div>
+                    foreach (var item in Model.JsonContent.attach2)
+                    {
+                        <img class="w-100 p-tb-10" src="@($"{item.url}/m_xq")" />
+                    }
+                    <div class='text-88 text-12'>
+                        @Model.applyResultUser
+                        处理于 @TypeConvert.LongToDateTime(Model.applyResultTime).ToString("yyyy-MM-dd HH:mm:ss")
+                    </div>
+                }
+                <div class='text-center p-15'>
+                    <div class='zan margin-auto' onclick="showCode()"><i class="iconfont icon-zantong mr-5"></i>点赞</div>
+                </div>
+                <div id="thumbs-box" class='ub ub-ac'>
+                    <i class="iconfont icon-zantong text-red mr-10"></i>
+                    <div id="thumbs-list" class="ub-f1">
+                    </div>
+                    <div id="more-box">...</div>
+                </div>
+            </div>
+            <div class='bg-fa'>
+                <div class='p-tb-10 p-lr-15 text-16 bb-1'>
+                    全部评论
+                    <span id="reply-count" class="ml-5 text-88 text-12">0</span>
+                </div>
+                <div class="commentList">
+                </div>
+            </div>
+        </div>
+        <div class='fixed-bottom bt-1 bg-fa p-tb-10 p-lr-15 ub ub-ac' onclick="showCode()">
+            <a url="#" class='ub-f1 '>
+                <input class='b-1 br-3 p-lr-10' style='height:3rem;' disabled='true' placeholder='发表评论...' />
+            </a>
+            <i class='ml-20 iconfont icon-fenxiang1 text-22'></i>
+            <i class='ml-20 iconfont icon-jiaguanzhu text-22'></i>
+        </div>
+    </div>
+</body>
+</html>
+

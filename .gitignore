@@ -1,0 +1,11 @@
+.vs
+!/dll/*.dll
+obj
+bin
+debug
+packages
+*.pdb
+*.xml
+*.exe
+logs
+img

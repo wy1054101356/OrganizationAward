@@ -1,0 +1,29 @@
+﻿@using org.Model;
+@{
+    Page.Title = "软件宏工程";
+    LoginUser loginUser = ViewBag.LoginUser as LoginUser;
+}
+
+<div class="article">
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h1 class="ui header">
+                    后台首页
+                    <div class="sub header">
+                        系统介绍
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <div class="main container">
+        <div class="ui active tab" data-tab="overview">
+            <h2 class="ui dividing header">欢迎使用后台管理</h2>
+            <div class="no">
+                <p>用户名：@Html.Raw(loginUser.uname)</p>
+                <p>请使用管理菜单，完成操作</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,104 @@
+﻿@using org.Common;
+@using org.Model;
+@{
+    Page.Title = "奖惩列表";
+    Page.Description = "奖惩列表";
+    string Pager = ViewBag.pager;
+    List<Reward> items = ViewBag.items;
+    LoginUser UserInfo = ViewBag.UserInfo;
+}
+
+<div class="article">
+    <div class="ui masthead vertical segment">
+        <div class="ui container">
+            <div class="introduction">
+                <h2 class="ui header">
+                    @Page.Title
+                    <div class="sub header">@Page.Description</div>
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="main container">
+        <div class="ui active tab" data-tab="overview">
+            <form method="get" class="ui form">
+                @{
+                    if (UserInfo.type != 3)
+                    {
+                        <div class="fields">
+                            <div class="three wide field">
+                                <a href="@Url.Action("Edit")" class="ui large blue label"><i class="plus icon"></i>添加奖惩</a>
+                            </div>
+                        </div>
+                    }
+                }
+
+                <div class="fields">
+                    <div class="two wide field">
+                        @Html.TextBox("name", "", new { @placeholder = "请输入用户名" })
+                    </div>
+                    <div class="two wide field">
+                        <button class="ui button" type="submit">查询</button>
+                    </div>
+                    <div class="four wide field">
+                        <button type="button" class="ui green button" onclick="top.location.href = '@Url.Action("Index")';">所有奖惩</button>
+                    </div>
+                </div>
+            </form>
+            <table class="ui celled table selectable">
+                <thead>
+                    <tr>
+                        <th>成员名</th>
+                        <th>奖惩类型</th>
+                        <th>创建时间</th>
+                        <th>分数</th>
+                        <th>备注</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        <tr>
+                            <td>
+                                @item.uname
+                            </td>
+                            <td>
+                                @{
+                                    var eo = EnumUtils.GetDescriptionStyle((Enums.RewardType)item.type);
+                                }
+                                <span class="ui olivelabel">@Html.Raw(eo.Description)</span>
+
+                            </td>
+                            <td>
+                                @TypeConvert.LongToDateTime(item.created).ToString("yyyy-MM-dd HH:mm")
+                            </td>
+                            <td>
+                                @item.points
+                            </td>
+                            <td>
+                               <div style="width:300">@item.remark</div>
+                            </td>
+                            <td>
+                               @if (UserInfo.type != 3)
+                                {
+                                <a href="javascript:Del('@Url.Action("Delete")',@item.id)" class="btn btn-white btn-sm"><i class="fa fa-trash"></i>删除</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="8">
+                            @Html.Raw(Pager)
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    //ModelExt.alert("");
+</script>

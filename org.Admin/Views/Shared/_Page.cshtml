@@ -1,0 +1,18 @@
+﻿@model IPagedList
+@using Webdiyer.WebControls.Mvc;
+
+@Html.Pager(Model, new PagerOptions
+{
+	PageIndexParameterName = "p",
+	FirstPageText = "«",
+	LastPageText = "»",
+	NextPageText = "›",
+	PrevPageText = "‹",
+	ContainerTagName = "ul",
+	CssClass = "pagination pagination-outline",
+	CurrentPagerItemTemplate = "<li class=\"page-number active\"><a href=\"#\">{0}</a></li>",
+	DisabledPagerItemTemplate = "<li class=\"page-number\"><a>{0}</a></li>",
+	PagerItemTemplate = "<li>{0}</li>"
+})
+
+
